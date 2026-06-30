@@ -174,14 +174,13 @@ dataset_final <- dados.mun %>%
     dens_demog = populacao / area_km2
   )
 
-write_csv(dataset_final, "dados/dataset_final.csv")
 saveRDS(estado.alvo, "dados/estado_alvo.rds")
 
 # --- 3. ANÁLISE DE AGRUPAMENTO (CLUSTER) ---
 cat("\n📊 Executando análise de agrupamento hierárquico (Ward.D2)...\n")
 
 variaveis <- dataset_final %>%
-  select(incidencia, pib_percapita, dens_demog, pct_esgoto, pct_agua, pct_lixo_coletado, temp_med_media, umid_med_media)
+  select(incidencia, pib_bruto_mil, dens_demog, pct_esgoto, pct_agua, pct_lixo_coletado, temp_med_media, umid_med_media)
 
 variaveis_mat <- as.data.frame(variaveis)
 rownames(variaveis_mat) <- dataset_final$municipio
@@ -196,6 +195,8 @@ cat(sprintf("  - Coeficiente de Correlação Cofenética: %.4f\n", cor(d.eucl, c
 k <- 3
 grupo <- cutree(metod.ward, k = k)
 dataset_final$grupo <- grupo
+
+write_csv(dataset_final, "dados/dataset_final.csv")
 
 # Perfil Médio dos Clusters
 cat("\n📊 Perfil descritivo médio por Cluster:\n")
